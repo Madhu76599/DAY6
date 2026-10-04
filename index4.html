@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#050605">
+	<title>Goodfood — Find your next favorite</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: dark;
+			--paper: #050605;
+			--ink: #f3f5f2;
+			--muted: #a1aaa1;
+			--line: #333a34;
+			--green: #91c99d;
+			--green-dark: #254633;
+			--orange: #ef956c;
+			--white: #141815;
+			--field: #0d100e;
+			--hero: #111913;
+			--hero-copy: #c0c8c0;
+			--icon-muted: #a6afa7;
+			--placeholder: #919a92;
+			--focus: #88b294;
+			--arrow: #acb5ac;
+			--chip-text: #d0d6d1;
+			--soft-line: #303632;
+			--image-placeholder: #1a201b;
+			--detail-text: #c0c8c0;
+			--loader-track: #29332b;
+			--hero-ring: rgba(143,201,157,.2);
+			--panel-border: rgba(255,255,255,.08);
+			--panel-shadow: rgba(0,0,0,.3);
+			--card-shadow: rgba(0,0,0,.22);
+			--dialog-shadow: rgba(0,0,0,.56);
+			--dialog-backdrop: rgba(0,0,0,.72);
+			--close-bg: rgba(29,34,30,.96);
+			--close-shadow: rgba(0,0,0,.4);
+			--green-on: #07110a;
+			--serif: "Playfair Display", Georgia, serif;
+			--sans: "DM Sans", sans-serif;
+		}
+		:root[data-theme="light"] {
+			color-scheme: light;
+			--paper: #f7f6f2;
+			--ink: #20251f;
+			--muted: #73796f;
+			--line: #e5e5dc;
+			--green: #315b42;
+			--orange: #d86c42;
+			--white: #fff;
+			--field: #fff;
+			--hero: #e9eee3;
+			--hero-copy: #646d62;
+			--icon-muted: #80877e;
+			--placeholder: #92978f;
+			--focus: #6f9276;
+			--arrow: #757c72;
+			--chip-text: #596056;
+			--soft-line: #efefe9;
+			--image-placeholder: #e8e9e3;
+			--detail-text: #50574e;
+			--loader-track: #dce4db;
+			--hero-ring: rgba(49,91,66,.12);
+			--panel-border: rgba(32,37,31,.06);
+			--panel-shadow: rgba(36,48,35,.06);
+			--card-shadow: rgba(36,48,35,.035);
+			--dialog-shadow: rgba(18,28,19,.28);
+			--dialog-backdrop: rgba(20,29,22,.62);
+			--close-bg: rgba(255,255,255,.94);
+			--close-shadow: rgba(0,0,0,.13);
+			--green-on: #fff;
+		}
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); transition: background .2s, color .2s; }
+		button, input, select { font: inherit; }
+		button { color: inherit; }
+		.topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; max-width: 1280px; padding: 0 38px; margin: auto; }
+		.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--green); text-decoration: none; font-size: 21px; font-weight: 700; letter-spacing: 0; }
+		.brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: var(--paper); }
+		.brand-mark svg { width: 19px; height: 19px; }
+		.nav-note { color: var(--muted); font-size: 13px; }
+		.theme-toggle { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); color: var(--ink); cursor: pointer; transition: border-color .18s, color .18s, background .18s; }
+		.theme-toggle:hover { border-color: var(--green); color: var(--green); }
+		.theme-toggle:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+		.theme-toggle svg { width: 19px; height: 19px; }
+		:root[data-theme="dark"] .theme-toggle .moon-icon, :root[data-theme="light"] .theme-toggle .sun-icon { display: none; }
+		.chef-cursor { position: fixed; z-index: 5000; top: 0; left: 0; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); box-shadow: 0 3px 12px rgba(0,0,0,.28); font-size: 24px; line-height: 1; opacity: 0; pointer-events: none; transform: translate3d(-100px,-100px,0); transition: opacity .12s; }
+		.chef-cursor.is-visible { opacity: 1; }
+		html.chef-cursor-active, html.chef-cursor-active * { cursor: none !important; }
+		.hero { position: relative; isolation: isolate; overflow: hidden; min-height: 326px; display: flex; align-items: center; background: var(--hero); }
+		.hero::before, .hero::after { content: ""; position: absolute; border: 1px solid var(--hero-ring); border-radius: 50%; pointer-events: none; }
+		.hero::before { width: 440px; height: 440px; right: 6%; top: -210px; }
+		.hero::after { width: 340px; height: 340px; right: 10%; top: -160px; }
+		.steam-scene { position: absolute; z-index: 0; top: 0; right: 4%; width: 370px; height: 100%; overflow: hidden; pointer-events: none; }
+		.steam-scene svg { display: block; width: 100%; height: 100%; overflow: visible; }
+		.steam-wisp { fill: none; stroke: var(--muted); stroke-width: 9; stroke-linecap: round; opacity: .22; filter: blur(4px); transform-box: fill-box; transform-origin: center; animation: steam-rise 5s ease-in-out infinite; }
+		.steam-wisp:nth-child(2) { stroke-width: 6; animation-delay: -1.7s; }
+		.steam-wisp:nth-child(3) { stroke-width: 7; animation-delay: -3.2s; }
+		@keyframes steam-rise { 0% { opacity: .04; transform: translate(0,18px) scale(.96); } 45% { opacity: .28; transform: translate(8px,-8px) scale(1.03); } 100% { opacity: .03; transform: translate(-6px,-42px) scale(.9); } }
+		.hero-inner { position: relative; z-index: 1; width: 100%; max-width: 1280px; padding: 46px 38px 52px; margin: auto; }
+		.eyebrow { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 15px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+		.eyebrow::before { content: ""; width: 23px; height: 1px; background: var(--orange); }
+		h1 { max-width: 650px; margin: 0; font: 700 64px/1.04 var(--serif); letter-spacing: 0; }
+		h1 em { color: var(--green); font-weight: 600; }
+		.hero-copy { max-width: 470px; margin: 17px 0 0; color: var(--hero-copy); font-size: 15px; line-height: 1.7; }
+		.content { max-width: 1280px; padding: 0 38px 80px; margin: -23px auto 0; position: relative; z-index: 2; }
+		.search-panel { padding: 18px; border: 1px solid var(--panel-border); border-radius: 8px; background: var(--white); box-shadow: 0 12px 32px var(--panel-shadow); }
+		.search-row { display: grid; grid-template-columns: minmax(220px, 1fr) 190px 190px 165px; gap: 10px; }
+		.searchbox { position: relative; }
+		.searchbox svg { position: absolute; top: 50%; left: 15px; width: 19px; height: 19px; color: var(--icon-muted); transform: translateY(-50%); pointer-events: none; }
+		.searchbox input, .select-wrap select { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 5px; outline: none; background: var(--field); color: var(--ink); }
+		.searchbox input { padding: 0 15px 0 44px; }
+		.searchbox input::placeholder { color: var(--placeholder); }
+		.searchbox input:focus, .select-wrap select:focus { border-color: var(--focus); box-shadow: 0 0 0 3px var(--hero-ring); }
+		.select-wrap select { padding: 0 37px 0 14px; appearance: none; cursor: pointer; }
+		.select-wrap { position: relative; }
+		.select-wrap::after { content: ""; position: absolute; top: 19px; right: 16px; width: 8px; height: 8px; border-right: 1.5px solid var(--arrow); border-bottom: 1.5px solid var(--arrow); transform: rotate(45deg); pointer-events: none; }
+		.filter-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 15px; }
+		.filter-label { flex: 0 0 auto; color: var(--muted); font-size: 12px; font-weight: 600; }
+		.chips { display: flex; flex: 1; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+		.chips::-webkit-scrollbar { display: none; }
+		.chip { flex: 0 0 auto; padding: 7px 13px; border: 1px solid var(--line); border-radius: 99px; background: var(--field); color: var(--chip-text); font-size: 12px; cursor: pointer; transition: background .18s, color .18s, border-color .18s; }
+		.chip:hover, .chip.active { border-color: var(--green); background: var(--green); color: var(--green-on); }
+		.clear-btn { flex: 0 0 auto; padding: 7px 0 7px 8px; border: 0; background: transparent; color: var(--green); font-size: 12px; font-weight: 700; cursor: pointer; }
+		.results-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 43px 0 19px; }
+		.results-head h2 { margin: 0; font: 700 29px/1.15 var(--serif); letter-spacing: 0; }
+		.results-meta { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+		.results-meta strong { color: var(--ink); }
+		.recipe-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 25px 19px; }
+		.recipe-card { min-width: 0; overflow: hidden; border-radius: 6px; background: var(--white); box-shadow: 0 2px 10px var(--card-shadow); animation: rise .4s both; }
+		@keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+		.card-media { position: relative; display: block; width: 100%; aspect-ratio: 1.2; padding: 0; overflow: hidden; border: 0; background: var(--image-placeholder); text-align: left; }
+		.card-media.has-video { cursor: pointer; }
+		.card-media:focus-visible { outline: 3px solid var(--orange); outline-offset: -3px; }
+		.card-image { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--image-placeholder); }
+		.video-preview { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; pointer-events: none; }
+		.video-hint { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 3px; background: rgba(26,34,27,.82); color: #fff; font-size: 11px; font-weight: 600; transition: opacity .18s; }
+		.video-hint svg { width: 13px; height: 13px; }
+		.card-media.is-playing .video-hint { opacity: 0; }
+		.card-body { padding: 15px 15px 16px; }
+		.card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
+		.card-category { overflow: hidden; color: var(--green); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+		.card-title { overflow: hidden; margin: 8px 0 13px; font: 700 19px/1.25 var(--serif); letter-spacing: 0; text-overflow: ellipsis; white-space: nowrap; }
+		.card-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 11px; border-top: 1px solid var(--soft-line); }
+		.card-area { color: var(--muted); font-size: 12px; }
+		.view-btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 0 5px 8px; border: 0; background: transparent; color: var(--green); font-size: 12px; font-weight: 700; cursor: pointer; }
+		.view-btn svg { width: 15px; height: 15px; transition: transform .18s; }
+		.view-btn:hover svg { transform: translateX(3px); }
+		.state { grid-column: 1 / -1; min-height: 240px; display: grid; place-items: center; padding: 30px; text-align: center; color: var(--muted); }
+		.state h3 { margin: 12px 0 5px; color: var(--ink); font: 700 23px var(--serif); }
+		.state p { margin: 0; font-size: 14px; line-height: 1.6; }
+		.loader { width: 30px; height: 30px; border: 3px solid var(--loader-track); border-top-color: var(--green); border-radius: 50%; animation: spin .75s linear infinite; }
+		@keyframes spin { to { transform: rotate(360deg); } }
+		.retry-btn { margin-top: 14px; padding: 9px 16px; border: 0; border-radius: 4px; background: var(--green); color: var(--green-on); font-size: 13px; font-weight: 600; cursor: pointer; }
+		.dialog { width: min(820px, calc(100% - 28px)); max-height: min(88vh, 900px); padding: 0; overflow: auto; border: 0; border-radius: 8px; background: var(--white); color: var(--ink); box-shadow: 0 24px 80px var(--dialog-shadow); }
+		.dialog::backdrop { background: var(--dialog-backdrop); backdrop-filter: blur(3px); }
+		.dialog-close { position: sticky; z-index: 2; top: 12px; float: right; display: grid; place-items: center; width: 38px; height: 38px; margin: 12px 12px -50px 0; border: 0; border-radius: 50%; background: var(--close-bg); box-shadow: 0 2px 10px var(--close-shadow); cursor: pointer; }
+		.dialog-close svg { width: 19px; height: 19px; }
+		.dialog-image { display: block; width: 100%; max-height: 360px; aspect-ratio: 2.1; object-fit: cover; background: var(--image-placeholder); }
+		.dialog-content { padding: 25px 32px 32px; }
+		.dialog-kicker { margin: 0 0 8px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+		.dialog-content h2 { margin: 0; font: 700 34px/1.15 var(--serif); }
+		.dialog-description { margin: 9px 0 23px; color: var(--muted); font-size: 13px; }
+		.recipe-columns { display: grid; grid-template-columns: minmax(190px, .75fr) 1.5fr; gap: 34px; }
+		.recipe-columns h3 { margin: 0 0 12px; font: 700 20px var(--serif); }
+		.ingredients { margin: 0; padding: 0; list-style: none; }
+		.ingredients li { padding: 9px 0; border-bottom: 1px solid var(--soft-line); color: var(--detail-text); font-size: 13px; }
+		.ingredients li span { color: var(--green); font-weight: 700; }
+		.instructions { color: var(--detail-text); font-size: 13px; line-height: 1.8; white-space: pre-line; }
+		.source-link { display: inline-block; margin-top: 12px; color: var(--green); font-size: 13px; font-weight: 700; }
+		footer { padding: 25px 38px; border-top: 1px solid var(--line); color: var(--muted); text-align: center; font-size: 12px; }
+		@media (max-width: 900px) {
+			.search-row { grid-template-columns: minmax(200px, 1fr) 1fr 1fr; }
+			.searchbox { grid-column: 1 / -1; }
+			.recipe-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+		}
+		@media (max-width: 620px) {
+			.topbar { height: 64px; padding: 0 20px; }
+			.nav-note { display: none; }
+			.hero { min-height: 295px; }
+			.steam-scene { right: -105px; width: 285px; opacity: .7; }
+			.hero-inner { padding: 40px 21px 55px; }
+			h1 { max-width: 440px; font-size: 40px; }
+			.hero-copy { max-width: 350px; font-size: 14px; }
+			.hero::before { right: -220px; }
+			.hero::after { right: -165px; }
+			.content { padding: 0 16px 55px; margin-top: -23px; }
+			.search-panel { padding: 13px; }
+			.search-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+			.searchbox { grid-column: 1 / -1; }
+			#sort-wrap { grid-column: 1 / -1; }
+			.searchbox input, .select-wrap select { height: 47px; font-size: 13px; }
+			.filter-footer { align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+			.filter-label { align-self: center; }
+			.chips { order: 3; flex-basis: 100%; }
+			.clear-btn { margin-left: auto; }
+			.results-head { margin-top: 34px; }
+			.results-head h2 { font-size: 26px; }
+			.recipe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 11px; }
+			.card-media { aspect-ratio: 1.06; }
+			.card-body { padding: 11px; }
+			.card-title { font-size: 16px; }
+			.card-meta { font-size: 10px; }
+			.dialog-content { padding: 22px 20px 26px; }
+			.dialog-content h2 { font-size: 29px; }
+			.recipe-columns { grid-template-columns: 1fr; gap: 25px; }
+			.dialog-image { aspect-ratio: 1.35; }
+			footer { padding: 22px 16px; }
+		}
+		@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+		@media (prefers-reduced-motion: reduce) { .steam-wisp { animation: none; opacity: .12; } }
+	</style>
+</head>
+<body>
+	<header class="topbar">
+		<a class="brand" href="#top" aria-label="Goodfood home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4.5-2.4-6.5-6.1-6.5-10.2A6.5 6.5 0 0 1 12 4.3a6.5 6.5 0 0 1 6.5 6.5C18.5 14.9 16.5 18.6 12 21Z"/><path d="M12 20.5c-.2-5.3.8-9 3.5-12"/></svg></span>goodfood</a>
+		<span class="nav-note">A little inspiration for your table</span>
+		<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
+			<svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+			<svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 15.3A8.5 8.5 0 0 1 8.7 3.8 8.5 8.5 0 1 0 20.2 15.3Z"/></svg>
+		</button>
+	</header>
+	<main id="top">
+		<section class="hero" aria-labelledby="hero-title">
+			<div class="steam-scene" aria-hidden="true">
+				<svg viewBox="0 0 360 326" preserveAspectRatio="xMidYMid meet">
+					<path class="steam-wisp" d="M86 342c-25-28 19-52-2-82-24-34 23-52 3-82-21-31 26-54 4-84-17-24 12-44 1-72"/>
+					<path class="steam-wisp" d="M180 344c22-30-18-51 4-82 24-34-22-52 1-83 22-29-19-53 2-82 18-24-9-48 8-75"/>
+					<path class="steam-wisp" d="M275 340c-20-29 19-50-3-79-23-31 17-53-2-83-20-31 20-52 1-81-16-25 12-43 2-70"/>
+				</svg>
+			</div>
+			<div class="hero-inner">
+				<p class="eyebrow">Made for your next meal</p>
+				<h1 id="hero-title">Find something<br><em>good to cook.</em></h1>
+				<p class="hero-copy">From weeknight favorites to faraway flavors, find a recipe that makes you look forward to dinner.</p>
+			</div>
+		</section>
+		<section class="content" aria-label="Find recipes">
+			<div class="search-panel">
+				<div class="search-row">
+					<label class="searchbox">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+						<input id="search" type="search" placeholder="Search recipes by name..." autocomplete="off" aria-label="Search recipes by name">
+					</label>
+					<label class="select-wrap"><select id="category" aria-label="Filter by category"><option value="">All categories</option></select></label>
+					<label class="select-wrap"><select id="area" aria-label="Filter by cuisine"><option value="">All cuisines</option></select></label>
+					  <label class="select-wrap" id="sort-wrap"><select id="sort" aria-label="Sort recipes"><option value="popular">Sort: Featured</option><option value="az">Name: A to Z</option><option value="za">Name: Z to A</option></select></label>
+				</div>
+				<div class="filter-footer">
+					<span class="filter-label">Popular:</span>
+					<div class="chips" id="chips" aria-label="Popular categories"></div>
+					<button class="clear-btn" id="clear" type="button">Clear filters</button>
+				</div>
+			</div>
+			<div class="results-head">
+				<div><h2>Recipes to love</h2><p class="results-meta" id="result-count" aria-live="polite">Finding your recipes...</p></div>
+			</div>
+			<div class="recipe-grid" id="recipes" aria-live="polite"><div class="state"><span class="loader" aria-label="Loading"></span></div></div>
+		</section>
+	</main>
+	<footer>Good food is always a good idea.</footer>
+	<dialog class="dialog" id="recipe-dialog" aria-labelledby="dialog-title">
+		<button class="dialog-close" id="dialog-close" type="button" aria-label="Close recipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+		<div id="dialog-content"></div>
+	</dialog>
+	<div class="chef-cursor" id="chef-cursor" aria-hidden="true">👨‍🍳</div>
+	<script>
+		const API = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
+		const recipeGrid = document.getElementById("recipes");
+		const searchInput = document.getElementById("search");
+		const categorySelect = document.getElementById("category");
+		const areaSelect = document.getElementById("area");
+		const sortSelect = document.getElementById("sort");
+		const resultCount = document.getElementById("result-count");
+		const chips = document.getElementById("chips");
+		const dialog = document.getElementById("recipe-dialog");
+		const dialogContent = document.getElementById("dialog-content");
+		const themeToggle = document.getElementById("theme-toggle");
+		const themeColor = document.querySelector('meta[name="theme-color"]');
+		const chefCursor = document.getElementById("chef-cursor");
+		let meals = [];
+		let searchTimer;
+		let requestController;
+		let requestId = 0;
+
+		function setTheme(theme, save = true) {
+			const selectedTheme = theme === "light" ? "light" : "dark";
+			const nextTheme = selectedTheme === "dark" ? "light" : "dark";
+			document.documentElement.dataset.theme = selectedTheme;
+			themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+			themeToggle.title = `Switch to ${nextTheme} theme`;
+			themeColor.content = selectedTheme === "dark" ? "#050605" : "#f7f6f2";
+			if (save) {
+				try {
+					localStorage.setItem("goodfood-theme", selectedTheme);
+				} catch {}
+			}
+		}
+
+		let savedTheme;
+		try {
+			savedTheme = localStorage.getItem("goodfood-theme");
+		} catch {}
+		setTheme(savedTheme, false);
+		themeToggle.addEventListener("click", () => {
+			setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+		});
+		if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+			document.documentElement.classList.add("chef-cursor-active");
+			window.addEventListener("pointermove", event => {
+				if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
+				chefCursor.style.transform = `translate3d(${event.clientX - 8}px,${event.clientY - 8}px,0)`;
+				chefCursor.classList.add("is-visible");
+			});
+			window.addEventListener("pointerleave", () => chefCursor.classList.remove("is-visible"));
+			window.addEventListener("pointerdown", () => chefCursor.classList.add("is-pressed"));
+			window.addEventListener("pointerup", () => chefCursor.classList.remove("is-pressed"));
+		}
+
+		function escapeHtml(value = "") {
+			return String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+		}
+
+		function getYoutubeEmbedUrl(value) {
+			if (!value) return "";
+			try {
+				const url = new URL(value);
+				const host = url.hostname.replace(/^www\./, "");
+				const videoId = host === "youtu.be"
+					? url.pathname.split("/").filter(Boolean)[0]
+					: url.searchParams.get("v") || url.pathname.match(/\/(?:embed|shorts|live)\/([^/]+)/)?.[1];
+				if (!/^[\w-]{11}$/.test(videoId || "")) return "";
+				return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&playsinline=1&rel=0`;
+			} catch {
+				return "";
+			}
+		}
+
+		function setLoading() {
+			recipeGrid.innerHTML = '<div class="state"><span class="loader" aria-label="Loading"></span></div>';
+			resultCount.textContent = "Finding your recipes...";
+		}
+
+		async function loadMeals(query = "") {
+			const currentRequest = ++requestId;
+			if (requestController) requestController.abort();
+			requestController = new AbortController();
+			setLoading();
+			try {
+				const response = await fetch(API + encodeURIComponent(query.trim()), { signal: requestController.signal });
+				if (!response.ok) throw new Error("Recipe service returned an error");
+				const data = await response.json();
+				if (currentRequest !== requestId) return;
+				meals = data.meals || [];
+				updateFilterOptions();
+				renderMeals();
+			} catch (error) {
+				if (error.name === "AbortError" || currentRequest !== requestId) return;
+				recipeGrid.innerHTML = '<div class="state"><div><h3>Recipes are taking a break</h3><p>We could not reach the recipe collection. Check your connection and try again.</p><button class="retry-btn" type="button" id="retry">Try again</button></div></div>';
+				resultCount.textContent = "Recipes unavailable";
+				document.getElementById("retry").addEventListener("click", () => loadMeals(searchInput.value));
+			}
+		}
+
+		function updateFilterOptions() {
+			const selectedCategory = categorySelect.value;
+			const selectedArea = areaSelect.value;
+			const categories = [...new Set(meals.map(meal => meal.strCategory).filter(Boolean))].sort();
+			const areas = [...new Set(meals.map(meal => meal.strArea).filter(Boolean))].sort();
+			categorySelect.innerHTML = '<option value="">All categories</option>' + categories.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("");
+			areaSelect.innerHTML = '<option value="">All cuisines</option>' + areas.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("");
+			if (categories.includes(selectedCategory)) categorySelect.value = selectedCategory;
+			if (areas.includes(selectedArea)) areaSelect.value = selectedArea;
+			const popular = categories.slice(0, 6);
+			chips.innerHTML = popular.map(item => `<button class="chip${categorySelect.value === item ? " active" : ""}" type="button" data-category="${escapeHtml(item)}">${escapeHtml(item)}</button>`).join("");
+			chips.querySelectorAll(".chip").forEach(chip => chip.addEventListener("click", () => {
+				categorySelect.value = categorySelect.value === chip.dataset.category ? "" : chip.dataset.category;
+				updateFilterOptions();
+				renderMeals();
+			}));
+		}
+
+		function renderMeals() {
+			let visible = meals.filter(meal => (!categorySelect.value || meal.strCategory === categorySelect.value) && (!areaSelect.value || meal.strArea === areaSelect.value));
+			if (sortSelect.value === "az") visible.sort((a, b) => a.strMeal.localeCompare(b.strMeal));
+			if (sortSelect.value === "za") visible.sort((a, b) => b.strMeal.localeCompare(a.strMeal));
+			resultCount.innerHTML = `Showing <strong>${visible.length}</strong> ${visible.length === 1 ? "recipe" : "recipes"}`;
+			if (!visible.length) {
+				recipeGrid.innerHTML = '<div class="state"><div><h3>No recipes found</h3><p>Try a different search or clear some filters.</p></div></div>';
+				return;
+			}
+			recipeGrid.innerHTML = visible.map((meal, index) => {
+				const videoUrl = getYoutubeEmbedUrl(meal.strYoutube);
+				const mediaTag = videoUrl ? "button" : "div";
+				const mediaAttributes = videoUrl ? `type="button" data-video="${videoUrl}" aria-label="Play video preview for ${escapeHtml(meal.strMeal)}"` : "";
+				const videoHint = videoUrl ? '<span class="video-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.5v9l7-4.5z"/></svg>Video preview</span>' : "";
+				return `<article class="recipe-card" style="animation-delay:${Math.min(index * 35, 350)}ms">
+				<${mediaTag} class="card-media${videoUrl ? " has-video" : ""}" ${mediaAttributes}>
+					<img class="card-image" src="${escapeHtml(meal.strMealThumb)}" alt="${escapeHtml(meal.strMeal)}" loading="lazy">${videoHint}
+				</${mediaTag}>
+				<div class="card-body">
+					<div class="card-meta"><span class="card-category">${escapeHtml(meal.strCategory || "Recipe")}</span><span>Recipe</span></div>
+					<h3 class="card-title" title="${escapeHtml(meal.strMeal)}">${escapeHtml(meal.strMeal)}</h3>
+					<div class="card-bottom"><span class="card-area">${escapeHtml(meal.strArea || "World cuisine")}</span><button class="view-btn" type="button" data-meal="${escapeHtml(meal.idMeal)}">View recipe <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+				</div>
+			</article>`;
+			}).join("");
+			recipeGrid.querySelectorAll(".view-btn").forEach(button => button.addEventListener("click", () => showRecipe(button.dataset.meal)));
+			recipeGrid.querySelectorAll(".card-media[data-video]").forEach(media => {
+				const stopPreview = () => {
+					media.classList.remove("is-playing");
+					media.querySelector(".video-preview")?.remove();
+				};
+				const startPreview = () => {
+					if (media.querySelector(".video-preview")) return;
+					const frame = document.createElement("iframe");
+					frame.className = "video-preview";
+					frame.src = media.dataset.video;
+					frame.title = media.getAttribute("aria-label");
+					frame.allow = "autoplay; encrypted-media; picture-in-picture";
+					frame.referrerPolicy = "strict-origin-when-cross-origin";
+					media.append(frame);
+					media.classList.add("is-playing");
+				};
+				media.addEventListener("pointerenter", event => { if (event.pointerType === "mouse") startPreview(); });
+				media.addEventListener("pointerleave", event => { if (event.pointerType === "mouse") stopPreview(); });
+				media.addEventListener("focus", startPreview);
+				media.addEventListener("blur", stopPreview);
+				media.addEventListener("click", event => {
+					if (event.detail === 0) return;
+					if (media.querySelector(".video-preview")) stopPreview();
+					else startPreview();
+				});
+			});
+		}
+
+		function showRecipe(id) {
+			const meal = meals.find(item => item.idMeal === id);
+			if (!meal) return;
+			const ingredients = [];
+			for (let index = 1; index <= 20; index++) {
+				const ingredient = meal[`strIngredient${index}`]?.trim();
+				const measure = meal[`strMeasure${index}`]?.trim();
+				if (ingredient) ingredients.push(`<li>${escapeHtml(ingredient)}${measure ? ` <span>· ${escapeHtml(measure)}</span>` : ""}</li>`);
+			}
+			const source = meal.strSource ? `<a class="source-link" href="${escapeHtml(meal.strSource)}" target="_blank" rel="noopener noreferrer">View original recipe ↗</a>` : "";
+			dialogContent.innerHTML = `<img class="dialog-image" src="${escapeHtml(meal.strMealThumb)}" alt="${escapeHtml(meal.strMeal)}">
+				<div class="dialog-content"><p class="dialog-kicker">${escapeHtml(meal.strCategory || "Recipe")} · ${escapeHtml(meal.strArea || "World cuisine")}</p>
+				<h2 id="dialog-title">${escapeHtml(meal.strMeal)}</h2><p class="dialog-description">A recipe worth gathering around.</p>
+				<div class="recipe-columns"><section><h3>Ingredients</h3><ul class="ingredients">${ingredients.join("")}</ul></section><section><h3>How to make it</h3><div class="instructions">${escapeHtml(meal.strInstructions || "Instructions are not available.")}</div>${source}</section></div></div>`;
+			dialog.showModal();
+		}
+
+		searchInput.addEventListener("input", () => {
+			clearTimeout(searchTimer);
+			searchTimer = setTimeout(() => loadMeals(searchInput.value), 350);
+		});
+		categorySelect.addEventListener("change", renderMeals);
+		areaSelect.addEventListener("change", renderMeals);
+		sortSelect.addEventListener("change", renderMeals);
+		document.getElementById("clear").addEventListener("click", () => {
+			searchInput.value = "";
+			categorySelect.value = "";
+			areaSelect.value = "";
+			sortSelect.value = "popular";
+			loadMeals();
+		});
+		document.getElementById("dialog-close").addEventListener("click", () => dialog.close());
+		dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+		loadMeals();
+	</script>
+</body>
+</html>
